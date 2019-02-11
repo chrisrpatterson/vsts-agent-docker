@@ -10,12 +10,13 @@ pool:
   vmImage: 'Ubuntu-16.04'
 
 steps:
-- task: 46E4BE58-730B-4389-8A2F-EA10B3E5E815@1
+- task: AzureCLI@1  #46E4BE58-730B-4389-8A2F-EA10B3E5E815@1
   inputs:
     azureSubscription: pipeline-acr
     failOnStandardError: false
+    scriptLocation: inlineScript
     inlineScript: |
       az acr login -n kaniko
       docker run --rm -v $(pwd)/ubuntu/16.04/standard:/workspace \
-                -v ~/.docker:/kaniko/.docker \
-                gcr.io/kaniko-project/executor:latest --cache=true --cache-repo=kaniko.azurecr.io/agents/vsts-agent-cache --destination=kaniko.azurecr.io/agents/vsts-agent:$(Build.BuildId) --dockerfile=/workspace/Dockerfile --context=dir://workspace
+                      -v ~/.docker:/kaniko/.docker \
+                      gcr.io/kaniko-project/executor:latest --cache=true --cache-repo=kaniko.azurecr.io/agents/vsts-agent-cache --destination=kaniko.azurecr.io/agents/vsts-agent:$(Build.BuildId) --dockerfile=/workspace/Dockerfile --context=dir://workspace
