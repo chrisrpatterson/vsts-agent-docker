@@ -1,0 +1,22 @@
+# Starter pipeline
+# Start with a minimal pipeline that you can customize to build and deploy your code.
+# Add steps that build, run tests, deploy, and more:
+# https://aka.ms/yaml
+
+trigger:
+- master
+
+pool:
+  vmImage: 'Ubuntu-16.04'
+
+steps:
+- task: AzureCLI@1
+  inputs:
+    azureSubscription: pipeline-acr
+    failOnStandardError: false
+    inlineScript: |
+      az acr login -n kaniko
+      docker run --rm -v $(pwd)/ubuntu/16.04/standard:/workspace \
+                -v ~/.docker:/kaniko/.docker \
+                gcr.io/kaniko-project/executor:latest --cache=true --cache-repo=kaniko.azurecr.io/agents/vsts-agent-cache --destination=kaniko.azurecr.io/agents/vsts-agent:$(Build.BuildId) --dockerfile=/workspace/Dockerfile --context=dir://workspace
+
