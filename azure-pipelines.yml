@@ -10,7 +10,7 @@ pool:
   vmImage: 'Ubuntu-16.04'
 
 steps:
-- task: AzureCLI@1
+- task: 46E4BE58-730B-4389-8A2F-EA10B3E5E815@1
   inputs:
     azureSubscription: pipeline-acr
     failOnStandardError: false
